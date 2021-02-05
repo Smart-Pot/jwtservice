@@ -1,6 +1,8 @@
 package jwtservice
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestResolve(t *testing.T) {
 	n := "Ahmet"

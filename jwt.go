@@ -9,23 +9,33 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-var jwtSecret = "jwtsecret"
+var jwtSecret string
+
+const defaultJWTToken string = "default_token_key"
 
 type JwtService struct{}
 
-func (j JwtService) Tokenize(userID string) (string, error) {
+func init() {
+	jwtSecret = os.Getenv("JWT_SECRET_KEY")
+	if jwtSecret == "" {
+		jwtSecret = defaultJWTToken
+	}
+	os.Setenv("ACCESS_SECRET", jwtSecret)
+}
 
+func New() *JwtService {
+	return &JwtService{}
+}
+
+func (j JwtService) Tokenize(userID string) (string, error) {
 	expirationTime := time.Now().Add(24 * 30 * time.Hour)
 	var err error
-	//Creating Access Token
-	os.Setenv("ACCESS_SECRET", "jdnfksdmfksd") //this should be in an env file
 	atClaims := jwt.MapClaims{}
 	atClaims["userId"] = userID
 	atClaims["exp"] = expirationTime.Unix()
-
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-
-	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+	fmt.Println("SECRET", jwtSecret)
+	token, err := at.SignedString([]byte(jwtSecret))
 	if err != nil {
 		return "", err
 	}
