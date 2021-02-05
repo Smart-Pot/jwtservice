@@ -11,14 +11,9 @@ import (
 
 var jwtSecret = "jwtsecret"
 
-type jwtClaims struct {
-	UserID string `json:"userId"`
-	jwt.StandardClaims
-}
+type JwtService struct{}
 
-type jwtService struct{}
-
-func (j jwtService) tokenize(userID string) (string, error) {
+func (j JwtService) Tokenize(userID string) (string, error) {
 
 	expirationTime := time.Now().Add(24 * 30 * time.Hour)
 	var err error
@@ -37,7 +32,7 @@ func (j jwtService) tokenize(userID string) (string, error) {
 	return token, nil
 }
 
-func (j jwtService) verify(tokenStr string) (jwt.MapClaims, error) {
+func (j JwtService) Verify(tokenStr string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -60,8 +55,8 @@ func (j jwtService) verify(tokenStr string) (jwt.MapClaims, error) {
 	return claims, nil
 }
 
-func (j jwtService) getUserID(tokenStr string) (string, error) {
-	claims, err := j.verify(tokenStr)
+func (j JwtService) GetUserID(tokenStr string) (string, error) {
+	claims, err := j.Verify(tokenStr)
 	if err != nil {
 		return "", err
 	}

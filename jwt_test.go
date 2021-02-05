@@ -4,13 +4,13 @@ import "testing"
 
 func TestResolve(t *testing.T) {
 	n := "Ahmet"
-	s := &jwtService{}
-	tokenStr, err := s.tokenize(n)
+	s := &JwtService{}
+	tokenStr, err := s.Tokenize(n)
 	if err != nil {
 		t.Error("Err", err)
 		t.FailNow()
 	}
-	claims, err := s.verify(tokenStr)
+	claims, err := s.Verify(tokenStr)
 	if err != nil {
 		t.Error("Err", err)
 		t.FailNow()
@@ -23,13 +23,13 @@ func TestResolve(t *testing.T) {
 
 func TestGetUserID(t *testing.T) {
 	n := "Ahmet"
-	s := &jwtService{}
-	tokenStr, err := s.tokenize(n)
+	s := &JwtService{}
+	tokenStr, err := s.Tokenize(n)
 	if err != nil {
 		t.Error("Err", err)
 		t.FailNow()
 	}
-	id, err := s.getUserID(tokenStr)
+	id, err := s.GetUserID(tokenStr)
 	if err != nil {
 		t.Error("Err", err)
 		t.FailNow()
